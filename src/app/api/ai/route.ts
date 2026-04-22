@@ -153,39 +153,47 @@ NO markdown. NO extra text. ONLY the JSON object.`;
     const { message, actions } = parsedResponse;
     let dataMutated = false;
 
-    if (actions && actions.length > 0) {
+    if (actions && Array.isArray(actions) && actions.length > 0) {
       const db = await readDB();
       if (!db.balances) db.balances = { saving: 0, spending: 0, cash: 0 };
+      if (!db.tasks) db.tasks = [];
+      if (!db.expenses) db.expenses = [];
+      if (!db.fitness) db.fitness = [];
+      if (!db.journal) db.journal = [];
 
       for (const act of actions) {
         dataMutated = true;
-        const p = act.payload;
+        const p = act.payload || {};
         const uid = () => `${Date.now()}${Math.floor(Math.random() * 10000)}`;
 
-        if (act.action === "add_task") {
-          db.tasks.push({ ...p, id: uid() });
-        } else if (act.action === "delete_task") {
-          db.tasks = db.tasks.filter((x: any) => x.id !== act.id);
-        } else if (act.action === "complete_task") {
-          const t = db.tasks.find((x: any) => x.id === act.id);
-          if (t) t.status = "completed";
-        } else if (act.action === "add_expense") {
-          if (db.balances[p.account] !== undefined) db.balances[p.account] -= Number(p.amount);
-          db.expenses.push({ ...p, id: uid() });
-        } else if (act.action === "add_income") {
-          if (db.balances[p.account] !== undefined) db.balances[p.account] += Number(p.amount);
-        } else if (act.action === "delete_expense") {
-          const target = db.expenses.find((x: any) => x.id === act.id);
-          if (target && db.balances[target.account] !== undefined) db.balances[target.account] += Number(target.amount);
-          db.expenses = db.expenses.filter((x: any) => x.id !== act.id);
-        } else if (act.action === "add_fitness") {
-          db.fitness.push({ ...p, id: uid() });
-        } else if (act.action === "delete_fitness") {
-          db.fitness = db.fitness.filter((x: any) => x.id !== act.id);
-        } else if (act.action === "add_journal") {
-          db.journal.push({ ...p, id: uid() });
-        } else if (act.action === "delete_journal") {
-          db.journal = db.journal.filter((x: any) => x.id !== act.id);
+        try {
+          if (act.action === "add_task") {
+            db.tasks.push({ ...p, id: uid() });
+          } else if (act.action === "delete_task") {
+            db.tasks = db.tasks.filter((x: any) => x.id !== act.id);
+          } else if (act.action === "complete_task") {
+            const t = db.tasks.find((x: any) => x.id === act.id);
+            if (t) t.status = "completed";
+          } else if (act.action === "add_expense") {
+            if (p.account && db.balances[p.account] !== undefined) db.balances[p.account] -= Number(p.amount || 0);
+            db.expenses.push({ ...p, id: uid() });
+          } else if (act.action === "add_income") {
+            if (p.account && db.balances[p.account] !== undefined) db.balances[p.account] += Number(p.amount || 0);
+          } else if (act.action === "delete_expense") {
+            const target = db.expenses.find((x: any) => x.id === act.id);
+            if (target && target.account && db.balances[target.account] !== undefined) db.balances[target.account] += Number(target.amount || 0);
+            db.expenses = db.expenses.filter((x: any) => x.id !== act.id);
+          } else if (act.action === "add_fitness") {
+            db.fitness.push({ ...p, id: uid() });
+          } else if (act.action === "delete_fitness") {
+            db.fitness = db.fitness.filter((x: any) => x.id !== act.id);
+          } else if (act.action === "add_journal") {
+            db.journal.push({ ...p, id: uid() });
+          } else if (act.action === "delete_journal") {
+            db.journal = db.journal.filter((x: any) => x.id !== act.id);
+          }
+        } catch (e) {
+            console.error("Failed to execute action:", act, e);
         }
       }
 
