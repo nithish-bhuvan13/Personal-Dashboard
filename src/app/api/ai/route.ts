@@ -168,8 +168,10 @@ NO markdown. NO extra text. ONLY the JSON object.`;
         const uid = () => `${Date.now()}${Math.floor(Math.random() * 10000)}`;
 
         try {
+          const cleanAmt = (val: any) => Number(String(val || 0).replace(/[^0-9.]/g, ''));
+          
           if (act.action === "add_task") {
-            if (p.category) p.category = String(p.category).toLowerCase().replace(" ", "_");
+            if (p.category) p.category = String(p.category).toLowerCase().replace(/[\s\-_]+/g, "_");
             db.tasks.push({ ...p, id: uid() });
           } else if (act.action === "delete_task") {
             db.tasks = db.tasks.filter((x: any) => x.id !== act.id);
@@ -178,16 +180,16 @@ NO markdown. NO extra text. ONLY the JSON object.`;
             if (t) t.status = "completed";
           } else if (act.action === "add_expense") {
             const acc = p.account ? String(p.account).toLowerCase() : "";
-            if (acc && db.balances[acc] !== undefined) db.balances[acc] -= Number(p.amount || 0);
-            db.expenses.push({ ...p, id: uid() });
+            if (acc && db.balances[acc] !== undefined) db.balances[acc] -= cleanAmt(p.amount);
+            db.expenses.push({ ...p, id: uid(), amount: cleanAmt(p.amount) });
           } else if (act.action === "add_income") {
             const acc = p.account ? String(p.account).toLowerCase() : "";
-            if (acc && db.balances[acc] !== undefined) db.balances[acc] += Number(p.amount || 0);
+            if (acc && db.balances[acc] !== undefined) db.balances[acc] += cleanAmt(p.amount);
           } else if (act.action === "delete_expense") {
             const target = db.expenses.find((x: any) => x.id === act.id);
             if (target && target.account) {
                const acc = String(target.account).toLowerCase();
-               if (db.balances[acc] !== undefined) db.balances[acc] += Number(target.amount || 0);
+               if (db.balances[acc] !== undefined) db.balances[acc] += cleanAmt(target.amount);
             }
             db.expenses = db.expenses.filter((x: any) => x.id !== act.id);
           } else if (act.action === "add_fitness") {

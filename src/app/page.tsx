@@ -318,7 +318,11 @@ export default function Dashboard() {
   const colors = { coding: "#00d9ff", academics: "#a78bfa", self_interest: "#ffaa00", courses: "#00ff88", fitness: "#ff0055", other: "#6b7280" } as any;
   let totalTasksCount = 0;
   data.tasks.forEach((t:any) => {
-     if (cats[t.category] !== undefined) { cats[t.category]++; totalTasksCount++; }
+     let c = String(t.category || "other").toLowerCase().replace(/[\s\-_]+/g, "");
+     if (c === "selfinterest") c = "self_interest";
+     if (cats[c] === undefined) c = "other";
+     cats[c]++;
+     totalTasksCount++;
   });
 
   let conicGradient = "";
@@ -458,16 +462,16 @@ export default function Dashboard() {
                                  <div style={{ flex: 1, minWidth: "120px" }}>
                                     <label style={{ fontSize: "10px", color: "var(--text-tertiary)", display: "block", marginBottom: "4px" }}>MANDATORY START</label>
                                     <div style={{ display: "flex", gap: "4px" }}>
-                                       <input name="startDate" type="date" className="input-field" style={{ padding: "8px", fontSize: "12px", marginBottom: 0 }} />
-                                       <input name="startTime" type="time" className="input-field" style={{ padding: "8px", fontSize: "12px", marginBottom: 0, maxWidth: "100px" }} />
+                                       <input name="startDate" type="date" className="input-field" onClick={(e: any) => e.target.showPicker && e.target.showPicker()} style={{ padding: "8px", fontSize: "12px", marginBottom: 0 }} />
+                                       <input name="startTime" type="time" className="input-field" onClick={(e: any) => e.target.showPicker && e.target.showPicker()} style={{ padding: "8px", fontSize: "12px", marginBottom: 0, maxWidth: "100px" }} />
                                     </div>
                                  </div>
                                  
                                  <div style={{ flex: 1, minWidth: "120px" }}>
                                     <label style={{ fontSize: "10px", color: "var(--text-tertiary)", display: "block", marginBottom: "4px" }}>MANDATORY FINISH</label>
                                     <div style={{ display: "flex", gap: "4px" }}>
-                                       <input name="endDate" type="date" className="input-field" style={{ padding: "8px", fontSize: "12px", marginBottom: 0 }} />
-                                       <input name="endTime" type="time" className="input-field" style={{ padding: "8px", fontSize: "12px", marginBottom: 0, maxWidth: "100px" }} />
+                                       <input name="endDate" type="date" className="input-field" onClick={(e: any) => e.target.showPicker && e.target.showPicker()} style={{ padding: "8px", fontSize: "12px", marginBottom: 0 }} />
+                                       <input name="endTime" type="time" className="input-field" onClick={(e: any) => e.target.showPicker && e.target.showPicker()} style={{ padding: "8px", fontSize: "12px", marginBottom: 0, maxWidth: "100px" }} />
                                     </div>
                                  </div>
                               </div>
@@ -491,7 +495,7 @@ export default function Dashboard() {
                         <div className="task-content">
                           <div className="task-name">{task.name}</div>
                           <div className="task-meta">
-                            <span className="task-category" style={{ background: `rgba(var(--deep-1), 0.5)`, color: colors[task.category] || "var(--electric)", border: `1px solid ${colors[task.category]}` }}>{task.category.toUpperCase().replace('_', ' ')}</span>
+                            <span className="task-category" style={{ background: `rgba(var(--deep-1), 0.5)`, color: colors[task.category] || "var(--electric)", border: `1px solid ${colors[task.category]}` }}>{String(task.category).toUpperCase().replace(/[\s\-_]+/g, ' ')}</span>
                             {task.durationReq && <span className="task-time"><Clock size={12} /> {task.durationReq}</span>}
                             {task.start && <span className="task-time">| Start: {new Date(task.start).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}</span>}
                           </div>
@@ -623,7 +627,7 @@ export default function Dashboard() {
                       </div>
                       <div className="input-group">
                         <label className="input-label">Date</label>
-                        <input name="date" type="date" className="input-field" defaultValue={new Date().toISOString().split('T')[0]} required />
+                        <input name="date" type="date" className="input-field" onClick={(e: any) => e.target.showPicker && e.target.showPicker()} defaultValue={new Date().toISOString().split('T')[0]} required />
                       </div>
                       <div className="input-group">
                         <label className="input-label">EXERCISE</label>
@@ -748,7 +752,7 @@ export default function Dashboard() {
                       <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
                          <div style={{ flex: 1 }}>
                             <label className="input-label">Date</label>
-                            <input name="date" type="date" className="input-field" defaultValue={new Date().toISOString().split('T')[0]} />
+                            <input name="date" type="date" className="input-field" onClick={(e: any) => e.target.showPicker && e.target.showPicker()} defaultValue={new Date().toISOString().split('T')[0]} />
                          </div>
                          <div style={{ flex: 2 }}>
                             <label className="input-label">Notes</label>
@@ -782,7 +786,7 @@ export default function Dashboard() {
                       </div>
                       <div className="input-group">
                          <label className="input-label">Date</label>
-                         <input name="date" type="date" className="input-field" defaultValue={new Date().toISOString().split('T')[0]} />
+                         <input name="date" type="date" className="input-field" onClick={(e: any) => e.target.showPicker && e.target.showPicker()} defaultValue={new Date().toISOString().split('T')[0]} />
                       </div>
                       <button type="submit" className="submit-btn" style={{ background: "linear-gradient(135deg, #00ff88, #00aa55)" }}>ADD FUNDS</button>
                     </form>
