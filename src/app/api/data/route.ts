@@ -79,11 +79,11 @@ async function writeDB(data: any) {
   }
 }
 
-function buildExcelBuffer(expenses: any[]): Buffer {
+function buildExcelBuffer(expenses: any[]): Uint8Array {
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.json_to_sheet(expenses);
   XLSX.utils.book_append_sheet(wb, ws, "Expenses");
-  return XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
+  return XLSX.write(wb, { type: "array", bookType: "xlsx" });
 }
 
 // ─── GET ─────────────────────────────────────────────────────────────────────
