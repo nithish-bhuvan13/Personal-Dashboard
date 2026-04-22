@@ -20,7 +20,7 @@ const DEFAULT_DB = {
   balances: { saving: 0, spending: 0, cash: 0 },
 };
 
-async function readDB() {
+export async function readDB() {
   if (!supabase) {
     // Local fallback — works in dev without Supabase
     const fs = await import("fs");
@@ -57,7 +57,7 @@ async function readDB() {
   return state;
 }
 
-async function writeDB(data: any) {
+export async function writeDB(data: any) {
   if (!supabase) {
     // Local fallback
     const fs = await import("fs");

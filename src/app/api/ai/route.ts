@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { readDB, writeDB } from "../data/route";
 
-const JSON_PATH = path.join(process.cwd(), "src/data/db.json");
 const GROQ_API_KEY = process.env.GROQ_API_KEY || "";
 const GROQ_BASE_URL = "https://api.groq.com/openai/v1";
 
@@ -156,7 +154,7 @@ NO markdown. NO extra text. ONLY the JSON object.`;
     let dataMutated = false;
 
     if (actions && actions.length > 0) {
-      const db = JSON.parse(fs.readFileSync(JSON_PATH, "utf8"));
+      const db = await readDB();
       if (!db.balances) db.balances = { saving: 0, spending: 0, cash: 0 };
 
       for (const act of actions) {
@@ -191,7 +189,7 @@ NO markdown. NO extra text. ONLY the JSON object.`;
         }
       }
 
-      fs.writeFileSync(JSON_PATH, JSON.stringify(db, null, 2));
+      await writeDB(db);
     }
 
     return NextResponse.json({ text: message, actionsExecuted: dataMutated });
