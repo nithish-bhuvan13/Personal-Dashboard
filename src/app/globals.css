@@ -1459,3 +1459,65 @@ html, body {
   animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE DESIGN SYSTEM (MOBILE/TABLET)
+   ═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .tasks-grid, .fitness-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 16px 20px;
+    justify-content: space-between;
+  }
+  
+  .nav {
+    position: relative;
+    left: 0;
+    transform: none;
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 16px;
+    overflow-x: auto;
+  }
+  
+  .ai-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .ai-content form {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .view {
+    padding: 20px;
+  }
+  
+  .glass-card {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-item span {
+    display: none; /* Icon only nav for very small mobile */
+  }
+  
+  .stats-sidebar .glass-card {
+    padding: 16px;
+  }
+  
+  .journal-canvas {
+    grid-template-columns: 1fr !important;
+  }
+}

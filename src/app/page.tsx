@@ -575,9 +575,10 @@ export default function Dashboard() {
                             onChange={handleInputGrow}
                             style={{ 
                                flex: 1, width: "100%", fontFamily: "JetBrains Mono", 
-                               fontSize: "13px", resize: "none", overflow: "hidden", minHeight: "40px" 
+                               fontSize: "13px", resize: "none", overflow: "hidden", minHeight: "40px",
+                               background: "transparent", color: "inherit", border: "none", outline: "none"
                             }}
-                            onBlur={(e) => syncData("POST", { type: "journal", payload: { ...j, content: e.target.value } }).then(()=>syncData("DELETE", { type: "journal", id: j.id })) } 
+                            onBlur={(e) => syncData("PUT", { type: "journal", id: j.id, payload: { ...j, content: e.target.value } })} 
                           ></textarea>
                           <span style={{ fontSize: "10px", color: "var(--text-tertiary)", marginTop: "24px" }}>{new Date(j.date).toLocaleDateString()} {new Date(j.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                       </div>

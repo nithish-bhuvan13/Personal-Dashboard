@@ -141,6 +141,11 @@ export async function PUT(req: Request) {
       if (payload?.account && data.balances[payload.account] !== undefined) {
         data.balances[payload.account] = Number(payload.amount);
       }
+    } else if (type === "journal") {
+      const note = data.journal.find((j: any) => j.id === id);
+      if (note) {
+        note.content = payload.content;
+      }
     }
 
     await writeDB(data);
