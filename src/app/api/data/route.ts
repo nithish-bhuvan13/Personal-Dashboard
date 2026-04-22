@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+export const dynamic = 'force-dynamic';
 import * as XLSX from "xlsx";
 import { createClient } from "@supabase/supabase-js";
 

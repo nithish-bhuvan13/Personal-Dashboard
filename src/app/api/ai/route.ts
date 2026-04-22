@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+export const dynamic = 'force-dynamic';
 import { readDB, writeDB } from "../data/route";
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY || "";
@@ -86,7 +87,7 @@ You MUST always respond with ONLY a valid JSON object in this exact format:
 }
 
 When Nithish asks you to add/delete/modify data, populate the "actions" array:
-{ "action": "add_task", "payload": { "name": "...", "category": "coding|academics|selfInterest|courses|other", "start": "ISO8601", "end": "ISO8601", "durationReq": "2h", "status": "pending" } }
+{ "action": "add_task", "payload": { "name": "...", "category": "coding|academics|self_interest|courses|fitness|other", "start": "ISO8601", "end": "ISO8601", "durationReq": "2h", "status": "pending" } }
 { "action": "delete_task", "id": "task_id" }
 { "action": "complete_task", "id": "task_id" }
 { "action": "add_expense", "payload": { "account": "saving|spending|cash", "amount": 500, "category": "Food|Transport|Shopping|Health|Education|Other", "date": "ISO8601", "notes": "..." } }
@@ -168,6 +169,7 @@ NO markdown. NO extra text. ONLY the JSON object.`;
 
         try {
           if (act.action === "add_task") {
+            if (p.category) p.category = String(p.category).toLowerCase().replace(" ", "_");
             db.tasks.push({ ...p, id: uid() });
           } else if (act.action === "delete_task") {
             db.tasks = db.tasks.filter((x: any) => x.id !== act.id);
@@ -175,13 +177,18 @@ NO markdown. NO extra text. ONLY the JSON object.`;
             const t = db.tasks.find((x: any) => x.id === act.id);
             if (t) t.status = "completed";
           } else if (act.action === "add_expense") {
-            if (p.account && db.balances[p.account] !== undefined) db.balances[p.account] -= Number(p.amount || 0);
+            const acc = p.account ? String(p.account).toLowerCase() : "";
+            if (acc && db.balances[acc] !== undefined) db.balances[acc] -= Number(p.amount || 0);
             db.expenses.push({ ...p, id: uid() });
           } else if (act.action === "add_income") {
-            if (p.account && db.balances[p.account] !== undefined) db.balances[p.account] += Number(p.amount || 0);
+            const acc = p.account ? String(p.account).toLowerCase() : "";
+            if (acc && db.balances[acc] !== undefined) db.balances[acc] += Number(p.amount || 0);
           } else if (act.action === "delete_expense") {
             const target = db.expenses.find((x: any) => x.id === act.id);
-            if (target && target.account && db.balances[target.account] !== undefined) db.balances[target.account] += Number(target.amount || 0);
+            if (target && target.account) {
+               const acc = String(target.account).toLowerCase();
+               if (db.balances[acc] !== undefined) db.balances[acc] += Number(target.amount || 0);
+            }
             db.expenses = db.expenses.filter((x: any) => x.id !== act.id);
           } else if (act.action === "add_fitness") {
             db.fitness.push({ ...p, id: uid() });
