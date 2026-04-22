@@ -29,6 +29,8 @@ export async function readDB() {
     try {
       const raw = fs.readFileSync(JSON_PATH, "utf8");
       const data = JSON.parse(raw);
+      if (!data.tasks) data.tasks = [];
+      if (!data.expenses) data.expenses = [];
       if (!data.fitness) data.fitness = [];
       if (!data.journal) data.journal = [];
       if (!data.balances) data.balances = { saving: 0, spending: 0, cash: 0 };
@@ -51,6 +53,8 @@ export async function readDB() {
   }
 
   const state = data.state;
+  if (!state.tasks) state.tasks = [];
+  if (!state.expenses) state.expenses = [];
   if (!state.fitness) state.fitness = [];
   if (!state.journal) state.journal = [];
   if (!state.balances) state.balances = { saving: 0, spending: 0, cash: 0 };
