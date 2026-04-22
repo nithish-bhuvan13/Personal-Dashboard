@@ -500,6 +500,31 @@ html, body {
    GLASS CARD SYSTEM
    ═══════════════════════════════════════════════════════════ */
 
+/* ═══════════════════════════════════════════════════════════
+   FORM ELEMENTS
+   ═══════════════════════════════════════════════════════════ */
+
+.input-field, .input-select {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 217, 255, 0.2);
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  outline: none;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.input-field:focus, .input-select:focus {
+  border-color: var(--electric);
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.15);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.input-field::placeholder {
+  color: var(--text-ghost);
+}
+
 .glass-card {
   background: rgba(13, 17, 23, 0.6);
   backdrop-filter: blur(16px) saturate(180%);

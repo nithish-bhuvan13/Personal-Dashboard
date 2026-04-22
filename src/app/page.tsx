@@ -576,7 +576,7 @@ export default function Dashboard() {
                             style={{ 
                                flex: 1, width: "100%", fontFamily: "JetBrains Mono", 
                                fontSize: "13px", resize: "none", overflow: "hidden", minHeight: "40px",
-                               background: "transparent", color: "inherit", border: "none", outline: "none"
+                               background: "transparent", border: "none", outline: "none", color: "var(--text-primary)"
                             }}
                             onBlur={(e) => syncData("PUT", { type: "journal", id: j.id, payload: { ...j, content: e.target.value } })} 
                           ></textarea>
