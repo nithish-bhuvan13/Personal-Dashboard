@@ -318,8 +318,12 @@ export default function Dashboard() {
   const colors = { coding: "#00d9ff", academics: "#a78bfa", self_interest: "#ffaa00", courses: "#00ff88", fitness: "#ff0055", other: "#6b7280" } as any;
   let totalTasksCount = 0;
   data.tasks.forEach((t:any) => {
-     let c = String(t.category || "other").toLowerCase().replace(/[\s\-_]+/g, "");
-     if (c === "selfinterest") c = "self_interest";
+     // Normalize: lowercase, collapse spaces/dashes/underscores to single underscore
+     let c = String(t.category || "other").toLowerCase().trim().replace(/[\s\-]+/g, "_");
+     // Map legacy variants
+     if (c === "selfinterest" || c === "self interest") c = "self_interest";
+     if (c === "selfInterest") c = "self_interest";
+     // Fallback unknown categories to 'other'
      if (cats[c] === undefined) c = "other";
      cats[c]++;
      totalTasksCount++;

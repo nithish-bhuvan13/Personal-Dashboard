@@ -530,8 +530,6 @@ html, body {
 .input-field::-webkit-calendar-picker-indicator:hover {
   opacity: 1;
 }
-  background: rgba(0, 0, 0, 0.5);
-}
 
 .input-field::placeholder {
   color: var(--text-ghost);

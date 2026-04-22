@@ -86,15 +86,28 @@ You MUST always respond with ONLY a valid JSON object in this exact format:
   "actions": []
 }
 
-When Nithish asks you to add/delete/modify data, populate the "actions" array:
+When Nithish asks you to add/delete/modify data, populate the "actions" array with ONE OR MORE action objects.
+
+TASK actions:
 { "action": "add_task", "payload": { "name": "...", "category": "coding|academics|self_interest|courses|fitness|other", "start": "ISO8601", "end": "ISO8601", "durationReq": "2h", "status": "pending" } }
 { "action": "delete_task", "id": "task_id" }
 { "action": "complete_task", "id": "task_id" }
-{ "action": "add_expense", "payload": { "account": "saving|spending|cash", "amount": 500, "category": "Food|Transport|Shopping|Health|Education|Other", "date": "ISO8601", "notes": "..." } }
-{ "action": "add_income", "payload": { "account": "saving|spending|cash", "amount": 1000, "category": "Salary|Freelance|Gift|Other", "date": "ISO8601" } }
+
+MONEY actions — READ CAREFULLY:
+- "account" MUST be exactly one of: "saving", "spending", or "cash" (always lowercase, never null)
+- If Nithish does not say which account, DEFAULT to "spending"
+- "amount" MUST be a plain NUMBER only — NO ₹, $, Rs or any currency symbols (e.g. 500 not ₹500)
+- add_expense = money going OUT (deducted from balance)
+- add_income = money coming IN (added to balance)
+{ "action": "add_expense", "payload": { "account": "spending", "amount": 500, "category": "Food|Transport|Books|Fitness|Other", "date": "ISO8601", "notes": "description here" } }
+{ "action": "add_income", "payload": { "account": "saving", "amount": 1000, "category": "Salary|Freelance|Gift|Other", "date": "ISO8601" } }
 { "action": "delete_expense", "id": "expense_id" }
+
+FITNESS actions:
 { "action": "add_fitness", "payload": { "target": "Upper Body|Lower Body|Abs|Skill|Rest", "exercise": "...", "reps": "10", "sets": "3", "duration": "30", "date": "ISO8601" } }
 { "action": "delete_fitness", "id": "fitness_id" }
+
+JOURNAL actions:
 { "action": "add_journal", "payload": { "content": "note content", "color": "electric|green|amber|purple", "date": "ISO8601" } }
 { "action": "delete_journal", "id": "journal_id" }
 
