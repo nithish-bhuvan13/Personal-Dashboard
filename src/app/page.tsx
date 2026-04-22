@@ -181,9 +181,17 @@ export default function Dashboard() {
         cache: "no-store"
       });
       const updated = await res.json();
+      if (!res.ok || updated.error) {
+        console.error("API Error Response:", updated);
+        alert(`Failed to sync data: ${updated.error || "Unknown Error"}`);
+        return;
+      }
       if (!updated.balances) updated.balances = { saving: 0, spending: 0, cash: 0 };
       if (!updated.fitness) updated.fitness = [];
       if (!updated.journal) updated.journal = [];
+      if (!updated.tasks) updated.tasks = [];
+      if (!updated.expenses) updated.expenses = [];
+      
       setData(updated);
       return updated;
     } catch (err) {
