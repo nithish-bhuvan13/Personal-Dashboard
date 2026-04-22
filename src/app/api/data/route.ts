@@ -184,7 +184,7 @@ export async function PATCH() {
   try {
     const data = await readDB();
     const buf = buildExcelBuffer(data.expenses);
-    return new Response(buf, {
+    return new Response(buf as any, {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "Content-Disposition": "attachment; filename=expenses.xlsx",
